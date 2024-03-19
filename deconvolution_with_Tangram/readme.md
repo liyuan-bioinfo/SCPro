@@ -1,4 +1,4 @@
-# Tangram for Integrated Analysis of Cell-Type Proteomics and Spatial-Proteomics Data
+# Integrated Analysis of Cell-Type Proteomics and Spatial-Proteomics Data with Tangram
 
 This repository contains code and documentation for using Tangram, a deep-learning, to perform integrated analysis of cell-type proteomics and spatial-proteomics data.
 
