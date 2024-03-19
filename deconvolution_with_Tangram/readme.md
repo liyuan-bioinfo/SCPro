@@ -15,7 +15,7 @@ To use Tangram for integrated analysis of cell-type proteomics and spatial-prote
 - Python 3.x
 - NumPy
 - Pandas
-- Matplotlib
+
 You can install these dependencies using pip:
 <code>pip install numpy pandas scanpy</code>
 
