@@ -1,8 +1,9 @@
 
 
-# Datasets and Methods of uSCPro
-# update: 20240319
-# author: Yuan
+- Datasets and Methods of uSCPro
+- update: 20240319
+- author: Yuan
+  
 ```
 # ------------------------------------------------
 ##     Bioinformastic analysis of datasets
