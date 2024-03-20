@@ -8,7 +8,7 @@ library(enrichplot)
 library(clusterProfiler)
 library(org.Mm.eg.db)
 library(pheatmap)
-setwd("/aaa/zihanwu/yyyli2/projectx_xu_NC2024/datasets/dataset_01")
+setwd("") 
 
 # -------------------------------------------------------------------------
 #                            I-Basic pre-treat                            #
