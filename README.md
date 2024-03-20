@@ -5,9 +5,9 @@
 - author: Yuan
   
 ```
-# ------------------------------------------------
-##     Bioinformastic analysis of datasets
-# ------------------------------------------------
+# -----------------------------------------------------------
+##   Introduction of datasets and related analysis items   ##
+# -----------------------------------------------------------
 ```
 
 dataset_01: 3 cell types, each has 4 replications, including Acinar, Lymph and Tumor. 
@@ -45,9 +45,9 @@ dataset_06, dataset_04 and dataset_05
 
 
 ```
-# ------------------------------------------------
-##             Quantification analysis
-# ------------------------------------------------
+# -----------------------------------------------------------
+##                 Quantification analysis                 ##
+# -----------------------------------------------------------
 ```
 Basic workflow
 - Filter: at least two valid in one group
@@ -57,9 +57,9 @@ Basic workflow
 - pheatmap: z-score of log2LFQ intensity. [Note]. All heatmap visualizations were performed on log2-normalized and scaled data with a standard deviation of 1 and a mean of 0. Values exceeding the 99th percentile or falling below the 1st percentile were replaced with the values of the 99th and 1st percentiles, respectively, prior to visualization.
 
 ```
-# ------------------------------------------------
-##                  Stat analysis
-# ------------------------------------------------
+# -----------------------------------------------------------
+##                     Stat analysis                       ##
+# -----------------------------------------------------------
 ```
 Two groups
 - Significance: two-tail Student's test, Benjamini–Hochberg correction for multiple hypothesis testing.
@@ -74,9 +74,9 @@ more than three groups
 - Fold change: One vs the Rest. sum of each group
 
 ```
-# ------------------------------------------------
-##                Functional analysis
-# ------------------------------------------------
+# -----------------------------------------------------------
+##                   Functional analysis                   ##
+# -----------------------------------------------------------
 ```
 GO enrichment
 - Significance: adj.pvalue[FDR] < 0.05
