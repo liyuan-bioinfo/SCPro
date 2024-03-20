@@ -41,9 +41,11 @@
 ## dataset_06, dataset_04 and dataset_05
 - Deconvolution Analysis: Tangram; 
 
+```
 # ------------------------------------------------
 ##             Quantification analysis
 # ------------------------------------------------
+```
 ## Basic workflow
 - Filter: at least two valid in one group
 - Imputation: normal distribution[downshift=1.8;width=0.3]
@@ -51,9 +53,11 @@
 - corr: using data after impute. [Note]. When calculating Pearson correlation, the comparison of a variable with itself was replaced with the maximum value of comparisons between pair-wise groups.
 - pheatmap: z-score of log2LFQ intensity. [Note]. All heatmap visualizations were performed on log2-normalized and scaled data with a standard deviation of 1 and a mean of 0. Values exceeding the 99th percentile or falling below the 1st percentile were replaced with the values of the 99th and 1st percentiles, respectively, prior to visualization.
 
+```
 # ------------------------------------------------
 ##                  Stat analysis
 # ------------------------------------------------
+```
 ### Two groups
 - Significance: two-tail Student's test, Benjamini–Hochberg correction for multiple hypothesis testing.
 - Fold change: mean
@@ -66,9 +70,11 @@
 - Significance: LIMMA, followed by Fisher’s Method to determine pvalues. Benjamini–Hochberg correction for multiple hypothesis testing.
 - Fold change: One vs the Rest. sum of each group
 
+```
 # ------------------------------------------------
 ##                Functional analysis
 # ------------------------------------------------
+```
 ### GO enrichment
 - Significance: adj.pvalue[FDR] < 0.05
 
