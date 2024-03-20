@@ -10,13 +10,12 @@
 # ------------------------------------------------
 ```
 
-```
-## dataset_01: 3 cell types, each has 4 replications, including Acinar, Lymph and Tumor. 
+dataset_01: 3 cell types, each has 4 replications, including Acinar, Lymph and Tumor. 
 - Quantified Analysis: PCA; Corr; ANOVA; 
 - Stat Analysis: ANOVA; 
 - Functional Analysis: GO-BP; 
 
-## dataset_02: 2 cell types, each has 4 replications, including PCC and Stroma. 
+dataset_02: 2 cell types, each has 4 replications, including PCC and Stroma. 
 - Quantified Analysis: PCA; Corr; 
 - Stat Analysis: Student's test;
 
@@ -43,7 +42,7 @@
 
 ## dataset_06, dataset_04 and dataset_05
 - Deconvolution Analysis: Tangram; 
-```
+
 
 ```
 # ------------------------------------------------
