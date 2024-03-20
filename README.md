@@ -9,6 +9,8 @@
 ##     Bioinformastic analysis of datasets
 # ------------------------------------------------
 ```
+
+```
 ## dataset_01: 3 cell types, each has 4 replications, including Acinar, Lymph and Tumor. 
 - Quantified Analysis: PCA; Corr; ANOVA; 
 - Stat Analysis: ANOVA; 
@@ -41,6 +43,7 @@
 
 ## dataset_06, dataset_04 and dataset_05
 - Deconvolution Analysis: Tangram; 
+```
 
 ```
 # ------------------------------------------------
