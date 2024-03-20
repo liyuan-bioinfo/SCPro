@@ -19,28 +19,28 @@ dataset_02: 2 cell types, each has 4 replications, including PCC and Stroma.
 - Quantified Analysis: PCA; Corr; 
 - Stat Analysis: Student's test;
 
-## dataset_03: 6 cell types, each has 3 replications, including [Acinar, PanIN and PDAC]; CAF, [IT and LN]. 
+dataset_03: 6 cell types, each has 3 replications, including [Acinar, PanIN and PDAC]; CAF, [IT and LN]. 
 - Quantified Analysis: PCA; 
 - Stat Analysis: ANOVA[ct3]; Student's test[ct2];
 - Functional Analysis: GO-BP; 
 
-## dataset_04: 14 cell types / 4 cell lineages, each has 3~4 replications, total 69 samples, including PCC, CAF, LYM and MYE. 
-### 4 cell lineages
+dataset_04: 14 cell types / 4 cell lineages, each has 3~4 replications, total 69 samples, including PCC, CAF, LYM and MYE. 
+for 4 cell lineages
 - Quantified Analysis: PCA; Pearson Corr.
 - Stat Analysis: LIMMA[ct4]
 - Functional Analysis: GO-BP; 
 
-### 14 celltypes
+for 14 celltypes
 - Quantified Analysis: Plasma Membrane Annotation; Molecular Function Annotation; 
 - Stat Analysis: LIMMA[ct14]; 
 - Futher Analysis: score for identify novel celltypes
 
-## dataset_05: 8 cell types, each has 3~4 replications, total 69 samples, including PCC, CAF, LYM and MYE. 
+dataset_05: 8 cell types, each has 3~4 replications, total 69 samples, including PCC, CAF, LYM and MYE. 
 - Quantified Analysis: PCA; 
 - Stat Analysis: Student's test;
 - Functional Analysis: GSEA; 
 
-## dataset_06, dataset_04 and dataset_05
+dataset_06, dataset_04 and dataset_05
 - Deconvolution Analysis: Tangram; 
 
 
@@ -49,7 +49,7 @@ dataset_02: 2 cell types, each has 4 replications, including PCC and Stroma.
 ##             Quantification analysis
 # ------------------------------------------------
 ```
-## Basic workflow
+Basic workflow
 - Filter: at least two valid in one group
 - Imputation: normal distribution[downshift=1.8;width=0.3]
 - PCA: not filter / quantified protein
@@ -61,15 +61,15 @@ dataset_02: 2 cell types, each has 4 replications, including PCC and Stroma.
 ##                  Stat analysis
 # ------------------------------------------------
 ```
-### Two groups
+Two groups
 - Significance: two-tail Student's test, Benjamini–Hochberg correction for multiple hypothesis testing.
 - Fold change: mean
 
-### Three groups
+Three groups
 - Significance: one-way ANOVA, followed by Tukey's post-hoc test and  Fisher’s Method to determine pvalues. Benjamini–Hochberg correction for multiple hypothesis testing.
 - Fold change: One vs the Rest, mean of each group
 
-### more than three groups
+more than three groups
 - Significance: LIMMA, followed by Fisher’s Method to determine pvalues. Benjamini–Hochberg correction for multiple hypothesis testing.
 - Fold change: One vs the Rest. sum of each group
 
@@ -78,10 +78,10 @@ dataset_02: 2 cell types, each has 4 replications, including PCC and Stroma.
 ##                Functional analysis
 # ------------------------------------------------
 ```
-### GO enrichment
+GO enrichment
 - Significance: adj.pvalue[FDR] < 0.05
 
-### GSEA enrichment
+GSEA enrichment
 - Rank: -log10pvalue * log2FC
 - Significance: NES > 0 and pvalue<0.05
 
