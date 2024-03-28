@@ -8,7 +8,15 @@ library(clusterProfiler)
 library(org.Mm.eg.db)
 
 setwd("")
-# Signficance Analysis with one-way ANOVA, for Figure 4c, 4d and 4e.
+# Imputating missing values with 0.1 * minimum intensity of each protein
+{
+    
+}
+
+# Imputating missing values with random distribution for ploting
+
+
+# Signficance Analysis with LIMMA, for Figure 4c, 4d and 4e.
 {
     rm(list=ls())
     Obj.list = readRDS(file="sp_dataset_03.rds")
