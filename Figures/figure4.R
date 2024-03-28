@@ -12,7 +12,7 @@ setwd("")
 # Figure_4c
 {
     rm(list=ls())
-    Obj.list = readRDS(file="sp_dataset_02.rdata")
+    Obj.list = readRDS(file="sp_dataset_03.rds")
     regions = c("Acinar","PanIN","PDAC")
     meta.df = Obj.list$meta %>% dplyr::filter(Group %in% regions)        
     plot.df = Obj.list$impute
@@ -47,7 +47,7 @@ setwd("")
 {
     rm(list=ls())
 
-    Obj.list = readRDS(file = "sp_dataset_02.rdata")
+    Obj.list = readRDS(file = "sp_dataset_03.rds")
     dep.df = Obj.list$PDAC_stage %>% filter(Pvalue<0.05 & log2FC>log2(2))
     dep.df$ENTREZID = Obj.list$anno[dep.df$pid,"GeneID"]        
 
@@ -81,7 +81,7 @@ setwd("")
 {
 
     rm(list=ls())
-    Obj_list = readRDS(file = "sp_dataset_02.rdata")
+    Obj_list = readRDS(file = "sp_dataset_03.rds")
     head(Obj_list$meta)
 
     meta_df = Obj_list$meta %>% filter(Group %in% c("Acinar","PanIN","PDAC"))
@@ -130,7 +130,7 @@ setwd("")
 # for Figure_4g
 {
     rm(list=ls())
-    Obj.list = readRDS(file="sp_dataset_02.rdata")
+    Obj.list = readRDS(file="sp_dataset_03.rds")
     regions = c("LN","IT")
     meta.df = Obj.list$meta %>% dplyr::filter(Group %in% regions)
         
@@ -162,7 +162,7 @@ setwd("")
 # for Figure_4h
 {
     rm(list=ls())
-    Obj.list = readRDS(file = "sp_dataset_02.rdata")
+    Obj.list = readRDS(file = "sp_dataset_03.rds")
     dep.df = Obj.list$Lym_DEP %>% filter(Pvalue<0.05 & abs(log2FC)>log2(2))
     dep.df$ENTREZID = Obj.list$anno[dep.df$pid,"GeneID"]
     dep.df$region = "LN"
