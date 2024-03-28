@@ -10,7 +10,7 @@ setwd("")
 
 # for Figure-2J, cluster
 {
-  data.df = readxl::read_xlsx("combined_protein_20230822.xlsx",sheet=3) %>% as.data.frame() # output from Perseus with one-way ANOVA
+  data.df = readxl::read_xlsx("combined_protein_20230822.xlsx",sheet=1) %>% as.data.frame() # output from Perseus with one-way ANOVA
   names(data.df)=gsub(names(data.df),pattern = " MaxLFQ.*$",replacement = "")
   data.df = data.df[which(data.df$`ANOVA Significant` == "+"),]#1776
   
