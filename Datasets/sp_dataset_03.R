@@ -8,8 +8,7 @@ library(clusterProfiler)
 library(org.Mm.eg.db)
 
 setwd("")
-
-## Signficance Analysis with one-way ANOVA, for Figure 4c, 4d and 4e
+# Signficance Analysis with one-way ANOVA, for Figure 4c, 4d and 4e.
 {
     rm(list=ls())
     Obj.list = readRDS(file="sp_dataset_03.rdata")
@@ -57,6 +56,42 @@ setwd("")
     dep.df = dep.df %>% arrange(region) # Table 1
     
     Obj.list$PDAC_stage = dep.df
+    saveRDS(Obj.list,file = "sp_dataset_03.rdata")    
+}
+
+# Signficance Analysis with two-sided Student's t-test, for Figure 4g and 4h.
+{
+    rm(list=ls())
+    Obj.list = readRDS(file="write/sp_dataset_03.rdata")
+    regions = c("LN","IT")
+    meta.df = Obj.list$meta %>% dplyr::filter(Group %in% regions)
+        
+    meta.df$Regions = factor(meta.df$Group,levels = regions)
+    meta.df = meta.df %>% arrange(Regions)
+    input.df = Obj.list$filter[,meta.df$SampleID]
+    input.df = input.df[-which(rowSums(input.df)==0),]
+    
+    Pvalue = c()
+    log2FC = c()
+    for(i in 1:dim(input.df)[1]){
+        pid.df = input.df[i,] %>% t() %>% as.data.frame()
+        names(pid.df) = "pid"
+        pid.df$SampleId = row.names(pid.df)
+        pid.df$Region = meta.df$Regions
+        p.value = t.test(data=pid.df,pid~Region)$p.value
+        Pvalue = c(Pvalue,p.value)
+        
+        temp_FC = median(pid.df$pid[1:3]) - median(pid.df$pid[4:6])
+        log2FC = c(log2FC, temp_FC)
+        
+    }
+    input.df$Pvalue = Pvalue
+    input.df$fdr = p.adjust(Pvalue,method = "BH")
+    input.df$log2FC = log2FC
+    
+    input.df$pid = Obj.list$anno[row.names(input.df),"pid"]
+    input.df$genename = Obj.list$anno[row.names(input.df),"Gene"]
+    
+    Obj.list$Lym_DEP = input.df
     saveRDS(Obj.list,file = "sp_dataset_03.rdata")
-    write.csv(dep.df,file="write/Fig4c_OnevsRest_FC2_table1.csv",row.names = F)
 }
