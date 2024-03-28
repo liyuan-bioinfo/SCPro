@@ -11,7 +11,7 @@ setwd("")
 # Signficance Analysis with one-way ANOVA, for Figure 4c, 4d and 4e.
 {
     rm(list=ls())
-    Obj.list = readRDS(file="sp_dataset_03.rdata")
+    Obj.list = readRDS(file="sp_dataset_03.rds")
     regions = c("Acinar","PanIN","PDAC")
     meta.df = Obj.list$meta %>% dplyr::filter(Group %in% regions)
         
@@ -56,13 +56,13 @@ setwd("")
     dep.df = dep.df %>% arrange(region) # Table 1
     
     Obj.list$PDAC_stage = dep.df
-    saveRDS(Obj.list,file = "sp_dataset_03.rdata")    
+    saveRDS(Obj.list,file = "sp_dataset_03.rds")    
 }
 
 # Signficance Analysis with two-sided Student's t-test, for Figure 4g and 4h.
 {
     rm(list=ls())
-    Obj.list = readRDS(file="write/sp_dataset_03.rdata")
+    Obj.list = readRDS(file="write/sp_dataset_03.rds")
     regions = c("LN","IT")
     meta.df = Obj.list$meta %>% dplyr::filter(Group %in% regions)
         
@@ -93,5 +93,5 @@ setwd("")
     input.df$genename = Obj.list$anno[row.names(input.df),"Gene"]
     
     Obj.list$Lym_DEP = input.df
-    saveRDS(Obj.list,file = "sp_dataset_03.rdata")
+    saveRDS(Obj.list,file = "sp_dataset_03.rds")
 }
