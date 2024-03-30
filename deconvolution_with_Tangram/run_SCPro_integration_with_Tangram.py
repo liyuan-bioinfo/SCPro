@@ -1,4 +1,3 @@
-#'@time 202403
 #'@author Yuan
 #'@desc Integration cell-type proteomics and spatial proteomics with Tangram
 
@@ -41,14 +40,13 @@ def run_Tangram(sc_adata, sp_adata, output_file_name, celltype_key="celltype"):
     celltype_density.to_csv(output_file_name)
 
     return(celltype_density)
-
+    
 # ----------------------------------------------------------------------------
-# run Tangram
+#                                     run Tangram                            
 # Predicted proportion of 4 celllineage for the spatial-data (PCC, CAF, MYE and LYM)
 # ----------------------------------------------------------------------------
-
-sp_adata_path = "raw/Tangram_deconvolution/PDAC2023_Spatial_20240319_5844.h5ad" # spatial-proteomics data
-sc_adata_path = "raw/Tangram_deconvolution/PDAC2023_ct14_20240319_5900.h5ad" #cell-type proteomics data
+sp_adata_path = "raw/Tangram_deconvolution/PDAC2023_Spatial.h5ad" # spatial-proteomics data
+sc_adata_path = "raw/Tangram_deconvolution/PDAC2023_ct14.h5ad" #cell-type proteomics data
 save_path = "raw/Tangram_deconvolution/ct14_cellperc_tangram.csv"
 
 sp_adata = sc.read_h5ad(sp_adata_path)
@@ -64,12 +62,13 @@ sc_adata = sc_adata[~sc_adata.obs["celltype"].str.contains('^myCAF$', case=False
 sc_adata = sc_adata[~sc_adata.obs["celltype"].str.contains('^apCAF$', case=False)].copy()
 run_Tangram(sc_adata=sc_adata, sp_adata=sp_adata, output_file_name=save_path, celltype_key="celltype")
 
+
 # ----------------------------------------------------------------------------
-# run Tangram
+#                                     run Tangram                            
 # Predicted proportion of 8 Treg-related celltypes for the spatial-data
 # ----------------------------------------------------------------------------
-sp_adata_path = "raw/Tangram_deconvolution/PDAC2023_Spatial_20240319_5844.h5ad"
-sc_adata_path = "raw/Tangram_deconvolution/PDAC2023_ct8_20240319_3824.h5ad"
+sp_adata_path = "raw/Tangram_deconvolution/PDAC2023_Spatial.h5ad"
+sc_adata_path = "raw/Tangram_deconvolution/PDAC2023_ct8.h5ad"
 save_path = "raw/Tangram_deconvolution/ct8_cellperc_tangram.csv"
 
 sp_adata = sc.read_h5ad(sp_adata_path)
