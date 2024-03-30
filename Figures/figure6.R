@@ -10,7 +10,7 @@ library(org.Mm.eg.db)
 setwd("")
 
 
-## Bar plot showing the protein numbers of quantified and identified proteins 
+# Bar plot showing the protein numbers of quantified and identified proteins 
 {
     rm(list=ls())
     Obj.list = readRDS(file = "ct_dataset_02.rds")
