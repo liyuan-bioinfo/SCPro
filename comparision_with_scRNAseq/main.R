@@ -1,7 +1,6 @@
 #'@author Yuan
 #'@desc comparision with scRNA-seq
-#'@version final-version
-
+#'@version comparison and visualization of 14 shared celltype using our ct_dataset_02 and public scRNA-seq dataset downloaded from GSE129455
 
 library(ggplot2)
 library(dplyr)
@@ -15,8 +14,9 @@ options(encoding = "UTF-8")
 
 setwd("")
 
-# panel a, Comparision umap
+# panel a, Comparision umap of shared cell types and origin cell types from source data's paper. 
 {
+  rm(list=ls())
   TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2022-11-29.rda")
   
   Idents(TotalTissue.harmony) = TotalTissue.harmony$Main_subset_labels2
@@ -49,12 +49,11 @@ setwd("")
 
 # cor, RNA vs RNA and Protein vs Protein
 {
-
   rm(list=ls())
   TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda")
   obj_list = readRDS(file = "ct_dataset_01.rds")
   
-  ##> scRNA-seq
+  # scRNA-seq
   scRNA_meta.df = TotalTissue.harmony@meta.data
   scRNA_meta.df$Main_subset_labels_V2 = as.character(scRNA_meta.df$Main_subset_labels)
   scRNA_meta.df[scRNA_meta.df$Main_subset_labels_V2 %in% c("Endo","Acinar","Other","Pericyte"),"Main_subset_labels_V2"]="Other"
@@ -247,14 +246,13 @@ setwd("")
   
 }
 
-# cell-perc
+# comparison of cell-percentage from public scRNA-seq dataset
 {
-
     rm(list=ls())
     TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda")
     obj_list = readRDS(file = "ct_dataset_01.rds")
     
-    ##> scRNA-seq
+    # pre-process of scRNA-seq with shared cell types
     scRNA_meta.df = TotalTissue.harmony@meta.data
     scRNA_meta.df$Main_subset_labels_V2 = as.character(scRNA_meta.df$Main_subset_labels)
     scRNA_meta.df[scRNA_meta.df$Main_subset_labels_V2 %in% c("Endo","Acinar","Other","Pericyte"),"Main_subset_labels_V2"]="Other"
@@ -270,131 +268,21 @@ setwd("")
     scRNA_number.df$omic = "scRNA"
     names(scRNA_number.df) = c("Sample","CellType","Value","Omic")
     
-    ##> combine
     plot.data =scRNA_number.df
     plot.data$CellType = factor(plot.data$CellType,levels=levels(obj_list$meta$CellType))
-    
-    pdf(file=paste0("write/A_CellPerc_RNA_",Sys.Date(),".pdf"),width=7,height = 5)
-    ggplot(plot.data, aes(fill=CellType, y=Value, x=Sample)) + 
+
+    # plot the cell-perc with 4 kpc mice
+    p1 = ggplot(plot.data, aes(fill=CellType, y=Value, x=Sample)) + 
         geom_bar(position="fill", stat="identity") + 
         theme_classic() + facet_wrap(.~Omic) + xlab("")+ylab("") +
         scale_fill_manual(values = levels(obj_list$meta$CellType_Color)) +
         theme(plot.background = element_blank(),panel.background = element_blank(),strip.background = element_blank(),
             legend.background = element_blank(),text = element_text(size=12),panel.grid = element_blank())#+
-    # scale_y_continuous(expand = c(0,0))
+    pdf(file=paste0("write/A_CellPerc_RNA_",Sys.Date(),".pdf"),width=7,height = 5)
+    print(p1)
     dev.off()
     
     write.csv(plot.data,file=paste0("write/A_CellPerc_RNA_",Sys.Date(),".csv"))
   
-
-}
-
-# Klrg1 - Immune
-{
-    rm(list=ls())
-    TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda")
-  
-    obj_list = readRDS(file = "ct_dataset_01.rds")
-
-    scRNA_meta.df = TotalTissue.harmony@meta.data
-    scRNA_meta.df$Main_subset_labels_V2 = as.character(scRNA_meta.df$Main_subset_labels)
-    scRNA_meta.df[scRNA_meta.df$Main_subset_labels_V2 %in% c("Endo","Acinar","Other","Pericyte"),"Main_subset_labels_V2"]="Other"
-    scRNA_meta_filter.df = scRNA_meta.df %>% filter(Main_subset_labels_V2 != "Other")
-    
-    scRNA_meta_filter.df$Main_subset_labels_V2 = factor(scRNA_meta_filter.df$Main_subset_labels_V2,levels = c(
-        "PCC","iCAF","myCAF","apCAF","T4","T8","Treg","B","MYE","NEU","MO","MAC","DC"
-    ))
-    TotalTissue.harmony@meta.data = scRNA_meta_filter.df
-    TotalTissue.harmony.filter = subset(TotalTissue.harmony,
-                                        idents=unique(scRNA_meta_filter.df$Main_subset_labels_V2))
-    
-    Idents(TotalTissue.harmony.filter) = TotalTissue.harmony.filter$Main_subset_labels_V2
-
-    PCC = c("Epcam")#5
-    MAC = c("C1qc") #0,1,2,4
-    MYE = c("Ear2") #6
-    B = c("Cd79a") #15
-    NEU = c("S100a8") #3
-    CAF = c("Col1a1") #11
-    T_NK = c("Ptprc","Il2ra","Cd3g","Cd4","Cd8a") #12
-    Treg = c("Klrg1","Foxp3","Ikzf2","Pdcd1")
-     
-    # Endo = c("Igfbp7","Plvap","Cd34")#16
-    DCs = c("Ccl5")#14
-    # Acinar = c("Ctrb1","Prss2","Try5")#17
-    # Peri = c("Igfbp7","Rgs5","Acta2")#18
-    # EMT_like = c("Cdkn2a","S100a6","Igfbp4","Sparc","Vim","Spp1")#7
-
-    known_markers = c(Treg)
-    p1=VlnPlot(TotalTissue.harmony.filter,features = c(Treg),ncol = 2,combine = TRUE,pt.size = 0,same.y.lims = FALSE
-          )# +RotatedAxis()#+ theme_bw()+
-          # theme(plot.background = element_blank(),panel.grid = element_blank(),
-          #       legend.position="none",plot.title = element_text(hjust = 0.5,size = 14))+
-          # labs(y="",fill="",x="")
-    pdf(file=paste0("write/e_Krlg1_Vlnplot_",Sys.Date(),".pdf"),width=10,height=5)
-    print(p1)
-    dev.off()
-
-    p2=DotPlot(TotalTissue.harmony.filter,features = known_markers) + coord_flip()# +RotatedAxis()#+ theme_bw()+
-    pdf(file=paste0("write/e_Krlg1_Dotplot_",Sys.Date(),".pdf"),width=10,height=5)
-    print(p2)
-    dev.off()    
-
-}
-
-{
-    rm(list=ls())
-    TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda")
-  
-    obj_list = readRDS(file = "ct_dataset_01.rds")
-
-    scRNA_meta.df = TotalTissue.harmony@meta.data
-    scRNA_meta.df$Main_subset_labels_V2 = as.character(scRNA_meta.df$Main_subset_labels)
-    # scRNA_meta.df[scRNA_meta.df$Main_subset_labels_V2 %in% c("Endo","Acinar","Other","Pericyte"),"Main_subset_labels_V2"]="Other"
-    scRNA_meta_filter.df = scRNA_meta.df %>% filter(Main_subset_labels_V2 %in% c("T4","T8","Treg","B"))
-    
-    scRNA_meta_filter.df$Main_subset_labels_V2 = factor(scRNA_meta_filter.df$Main_subset_labels_V2,levels = c(
-        "T4","T8","Treg","B"
-    ))
-    TotalTissue.harmony@meta.data = scRNA_meta_filter.df
-    TotalTissue.harmony.filter = subset(TotalTissue.harmony,
-                                        idents=unique(scRNA_meta_filter.df$Main_subset_labels_V2))
-    # 1. 提取基因表达数据
-    #使用FetchData直接提取，这和直接用seurat画图的数据是一样的
-    #方法一：直接提取            
-    DefaultAssay(TotalTissue.harmony.filter) <- "RNA"
-    interested_gene <- c("Tnfrsf18")
-    data_df <- Seurat::FetchData(TotalTissue.harmony.filter,vars = interested_gene)
-    data_df <- as.data.frame(data_df)
-
-    # 2. 整理数据为长格式
-    data_long <- data_df %>% 
-    tibble::rownames_to_column("Cell") %>% 
-    tidyr::pivot_longer(-Cell, names_to = "Gene", values_to = "Expression")
-    # 将分组信息（group名字）配对到表格里
-    data_long$Group <- TotalTissue.harmony.filter$Main_subset_labels_V2[data_long$Cell]    
-    head(data_long)
-
-    # 3. 使用ggplot2绘图
-    p1 = ggplot(data_long, aes(x = Group, y = Expression, fill = Group)) + 
-        geom_boxplot(outlier.shape = NA) + 
-        geom_jitter(size=1) +   #size=散的大小,禁用这行代码就不显示散点
-        labs(title = "Boxplot of gene expression", y = "Expression level") + 
-        # scale_fill_manual(values = c("#00ABBD", "#FF9933")) + #分组配色
-        #theme_minimal() +
-        theme(legend.position = "none")
-    # print(plot_box)
-
-    pdf(file=paste0("write/e_Krlg1_Boxplot_",Sys.Date(),".pdf"),width=10,height=5)
-    print(p1)
-    dev.off()        
-
-}
-
-{
-    rm(list=ls())
-    temp.KPC.raw = readRDS("GSE129455_All_Viable_expression.rda")
-
-
 
 }
