@@ -12,7 +12,7 @@ setwd("")
 # Bar plot for identified and quantified proteins
 {
   rm(list=ls())
-  Obj.list = readRDS(file = "../FACS.MSFragger.Obj.20221128.rds")
+  Obj.list = readRDS(file = "ct_dataset_01.rds")
   temp.df = Obj.list$identified %>% t() %>% as.data.frame()
   
   meta.df = Obj.list$meta %>% select(SampleID,CellType) %>% unique()
@@ -136,8 +136,7 @@ setwd("")
   print(p1)
   dev.off()
   
-  write.csv(temp.cor, file=paste0("Fig5_D_Corr_Pheatmap_Min10_",
-                                  Sys.Date(),".csv"))
+  write.csv(temp.cor, file=paste0("Fig5_D_Corr_Pheatmap_Min10_", Sys.Date(),".csv"))
   
 }
 
