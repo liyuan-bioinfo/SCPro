@@ -8,7 +8,7 @@ library(ggplot2)
 
 setwd("")
 
-# for Figure-2J, cluster
+# for Figure-2J, cluster analysis of sig. proteins after one-way ANOVA
 {
   data.df = readxl::read_xlsx("sp_dataset_01.xlsx",sheet=1) %>% as.data.frame() # output from Perseus with one-way ANOVA
   names(data.df)=gsub(names(data.df),pattern = " MaxLFQ.*$",replacement = "")
@@ -28,7 +28,7 @@ setwd("")
   write.csv(temp.df,file="write/pheatmap_cluster_table.csv")
 }
 
-# for figure-2J, GO-BP annotation
+# for Figure-2J, Enrichment Analysis annotation of sig. Proteins
 {  
   pheatmap_cluster.df = read.csv(file="write/pheatmap_cluster_table.csv",header = T,row.names = 1)
   pheatmap_cluster.df$group = factor(pheatmap_cluster.df$group, levels = c("Acinar", "Tumor", "Lymph"))
