@@ -8,8 +8,7 @@ library(ggplot2)
 library(ggpubr)
 
 setwd("")
-
-# Figure_4c
+# Figure_4C, heatmap for Sig. proteins after one-way ANOVA
 {
     rm(list=ls())
     Obj.list = readRDS(file="sp_dataset_03.rds")
@@ -43,7 +42,7 @@ setwd("")
     dev.off()
 }
 
-# for Figure_4d
+# for Figure_4D, Enrichment Analysis of Sig. proteins after one-way ANOVA
 {
     rm(list=ls())
 
@@ -77,7 +76,7 @@ setwd("")
     dev.off()
 }
 
-# for Figure_S9
+# for Figure_S9, box plot of selected proteins based on the protein intensity before imputation
 {
 
     rm(list=ls())
@@ -127,7 +126,7 @@ setwd("")
     dev.off()    
 }
 
-# for Figure_4g
+# for Figure_4G, pheatmap based on the Sig. proteins after two-sided student's t-test
 {
     rm(list=ls())
     Obj.list = readRDS(file="sp_dataset_03.rds")
@@ -159,7 +158,7 @@ setwd("")
     dev.off()    
 }
 
-# for Figure_4h
+# for Figure_4H, Enrichment Analysis of Sig. proteins
 {
     rm(list=ls())
     Obj.list = readRDS(file = "sp_dataset_03.rds")
@@ -175,8 +174,9 @@ setwd("")
                                     
     )
     formula_res_cutoff = formula_res    
-    formula_res_cutoff@compareClusterResult = formula_res@compareClusterResult[formula_res@compareClusterResult$p.adjust<0.05,] # save table
+    formula_res_cutoff@compareClusterResult = formula_res@compareClusterResult[formula_res@compareClusterResult$pvalue<0.05,] # save table
 
+    # select cell-type specific enriched items for visualization
     selected_GO = formula_res_cutoff@compareClusterResult
     selected_items = c("T cell receptor signaling pathway","response to virus","regulation of lymphocyte mediated immunity","regulation of leukocyte cell-cell adhesion","B cell proliferation",        
         "response to extracellular stimulus","myeloid leukocyte differentiation","lymphocyte mediated immunity","extracellular matrix organization","cytokine production involved in immune response","antigen processing and presentation"
