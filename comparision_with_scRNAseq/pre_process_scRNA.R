@@ -1,12 +1,13 @@
-# demo file
+#'@desc workflow for pre-precess of scRNA-seq dataset from GSE129455
 #'@author Yuan
 #===============================================================================
 #           Part I, Basic Analysis with scRNA-seq data using Seurat            #
 #================================================================================
-
 rm(list=ls())
 library(Seurat)
 library(org.Mm.eg.db)
+library(org.Hs.eg.db)
+library(Orthology.eg.db)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -54,8 +55,8 @@ setwd("")
   ids=ids[!duplicated(ids$ENSEMBL),]
   pos=match(ids$ENSEMBL,rownames(KPC.Seurat))
   KPC.Seurat=KPC.Seurat[pos,]
-  KPC.Seurat
-  # RenameGenesSeurat  ------------------------------------------------------------------------------------
+  
+  # RenameGenesSeurat
   RenameGenesSeurat <- function(obj, newnames) { # Replace gene names in different slots of a Seurat object. Run this before integration. Run this before integration. It only changes obj@assays$RNA@counts, @data and @scale.data.
     print("Run this before integration. It only changes obj@assays$RNA@counts, @data and @scale.data.")
     RNA <- obj@assays$RNA
@@ -73,14 +74,10 @@ setwd("")
   KPC.Seurat.rename[["RNA"]]@meta.features <- data.frame(row.names = rownames(KPC.Seurat.rename[["RNA"]]))
   #find variable gene
   KPC.Seurat.rename<- FindVariableFeatures(object = KPC.Seurat.rename, mean.function = ExpMean, dispersion.function = LogVMR)
-  
-  library(org.Hs.eg.db)
-  library(org.Mm.eg.db)
-  library(Orthology.eg.db)
-  
+
+  # regression with Cell Cycle Genes from human
   s.genes <- cc.genes$s.genes
   g2m.genes <- cc.genes$g2m.genes
-  
   
   temp.egs <- mapIds(org.Hs.eg.db,s.genes, "ENTREZID","SYMBOL")
   mapped <- AnnotationDbi::select(Orthology.eg.db, temp.egs, "Mus.musculus","Homo.sapiens")
