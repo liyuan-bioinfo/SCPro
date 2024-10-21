@@ -76,6 +76,40 @@ setwd("")
     dev.off()
 }
 
+    ## Obtain Pvalue from ANOVA for selected 5 proteins
+    {
+        rm(list=ls())
+        Obj.list = readRDS(file="KPC_Obj_20230505.rdata")
+        regions = c("Acinar","PanIN","PDAC")
+        select_pid = c("Q7TPZ8","O09037","O88343","P07356","Q91YL7")
+        meta.df = Obj.list$meta %>% dplyr::filter(Group %in% regions)
+        meta.df$Regions = factor(meta.df$Group,levels = regions)
+        meta.df = meta.df %>% arrange(Regions)
+        input.df = Obj.list$filter[select_pid,meta.df$SampleID]
+    
+        head(input.df)
+        
+        list_merge.list= list()
+        Pvalue = c()
+        for(i in 1:dim(input.df)[1]){
+            pid.df = input.df[i,] %>% t() %>% as.data.frame()
+            names(pid.df) = "pid"
+            pid.df$SampleId = row.names(pid.df)
+            pid.df$Region = meta.df$Regions
+            aov_model = aov(data=pid.df,pid~Region)
+            p.value = summary(aov_model)[[1]]$`Pr(>F)`[1]
+    
+            tukey <- TukeyHSD(aov_model)
+            print(select_pid[i])
+            print(tukey)
+            print("===============")
+            Pvalue = c(Pvalue,p.value)
+            
+        }
+        print(Pvalue)
+                                    
+    }
+
 # for Figure_S9, box plot of selected proteins based on the protein intensity before imputation
 {
 
