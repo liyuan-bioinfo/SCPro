@@ -9,7 +9,7 @@ library(clusterProfiler)
 library(org.Mm.eg.db)
 
 setwd("")
-# Bar plot for identified and quantified proteins
+# Figure_5b, bar plots of identified and quantified proteins, respectively
 {
   rm(list=ls())
   Obj.list = readRDS(file = "ct_dataset_01.rds")
@@ -86,21 +86,20 @@ setwd("")
     labs(y="Protein groups(number)",fill="",x="")+
     # ylab("Protein groups(number)")+
     scale_y_continuous(expand = c(0,0),limits=c(0,8000),breaks=c(0,2000,4000,5000,6000,7000,8000),label=c(0,2000,4000,5000,6000,7000,8000))
-    
-  
+      
   ## Output  
   plot.data.bar2 = rbind(plot.data,plot.data2)
   write.csv(plot.data.bar2,
-            file = paste0("Fig2_C_ProteinNumber_PG_IdentifiedvsQuantified_Barplot_",Sys.Date(),".csv"),
+            file = paste0("Fig5_b_ProteinNumber_PG_IdentifiedvsQuantified_Barplot_",Sys.Date(),".csv"),
             fileEncoding = "UTF-8",row.names = F,quote = TRUE)
   
-  pdf(paste0("Fig2_C_ProteinNumber_PG_IdentifiedvsQuantified_Barplot_",Sys.Date(),".pdf"),
+  pdf(paste0("Fig5_b_ProteinNumber_PG_IdentifiedvsQuantified_Barplot_",Sys.Date(),".pdf"),
         width=6,height = 4)
   print(temp.p1)
   dev.off()
 }    
 
-# Pheatmap for the Pearson Corr. Coef
+# Figure_12c, heat map of the Pearson Corr. Coef of all samples
 {
   rm(list=ls())
   Obj.list = readRDS(file = "ct_dataset_01.rds")
