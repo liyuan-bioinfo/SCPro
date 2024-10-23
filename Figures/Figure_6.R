@@ -224,7 +224,7 @@ setwd("")
 {
     rm(list=ls())
     obj_list = readRDS("ct_dataset_02.rds")
-    dep_df = obj_list$dep_df
+    dep_df = obj_list$dep_df # this should be obtained from "ct_dataset_02.R"
     logFC_cutoff <- log2(2)
     log10_P_Value_cutoff <- -log10(0.05)
 
