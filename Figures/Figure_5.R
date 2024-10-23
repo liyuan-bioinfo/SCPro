@@ -99,7 +99,7 @@ setwd("")
   dev.off()
 }    
 
-# Figure_12c, heat map of the Pearson Corr. Coef of all samples
+# Figure_S12c, heat map of the Pearson Corr. Coef. of all samples
 {
   rm(list=ls())
   Obj.list = readRDS(file = "ct_dataset_01.rds")
@@ -131,15 +131,15 @@ setwd("")
                 annotation_row = temp.cor.anno,annotation_colors = mycolors,
                 annotation_legend = F,fontsize_row = 6,fontsize_col = 6,
                 color = colorRampPalette(c("darkgrey","white","darkgoldenrod1","brown3"))(100),silent = TRUE)
-  pdf(file = paste0("Fig5_D_Corr_Pheatmap_Min10_", Sys.Date(),".pdf"), width=7,heigh=6)
+  pdf(file = paste0("Figure_S12c_Corr_Pheatmap_", Sys.Date(),".pdf"), width=7,heigh=6)
   print(p1)
   dev.off()
   
-  write.csv(temp.cor, file=paste0("Fig5_D_Corr_Pheatmap_Min10_", Sys.Date(),".csv"))
+  write.csv(temp.cor, file=paste0("Figure_S12c_Corr_Pheatmap_", Sys.Date(),".csv"))
   
 }
 
-# Figure_12d, heat map for visualization of known markers
+# Figure_S12d, heat map for visualization of known markers
 {
   rm(list=ls())  
   Obj.list = readRDS(file = "ct_dataset_01.rds")
@@ -205,16 +205,16 @@ setwd("")
   print(p1)
   dev.off()
   
-  write.csv(known_marker_lfq_mean.df, file=paste0("Fig_12d_Selected_Known_Markers_Pheatmap_",Sys.Date(),".csv",sep=""),row.names = T)
+  write.csv(known_marker_lfq_mean.df, file=paste0("Fig_S12d_Selected_Known_Markers_Pheatmap_",Sys.Date(),".csv",sep=""),row.names = T)
   
 }
 
-# Figure_5_d, heat map showing the Sig. proteins based on one-vs-the rest strategy
+# Figure_5d, heat map showing the Sig. proteins based on one-vs-the rest strategy
 {
     rm(list=ls())
     Obj.list = readRDS(file = "ct_dataset_01.rds")
     data <- Obj.list$Mini_impute_log2
-    deg <- Obj.list$deg_Fig3
+    deg <- Obj.list$dep_df
     meta = Obj.list$meta
     
     plot_data.df = data[unique(deg$pid),]
@@ -247,7 +247,7 @@ setwd("")
   rm(list=ls())
   Obj.list = readRDS(file = "ct_dataset_01.rds")
     
-  data <- Obj.list$deg_Fig3
+  data <- Obj.list$dep_df
   meta <- Obj.list$meta
   
   PCC_specific = data %>% filter(CellType %in% c("PCC")) %>% select(pid) %>% unlist()
