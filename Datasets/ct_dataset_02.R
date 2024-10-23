@@ -9,7 +9,7 @@ library(org.Mm.eg.db)
 
 setwd("")
 
-# Imputating missing values with 0.1 * minimum intensity of each protein
+# Imputing missing values with 0.1 * minimum intensity of each protein
 {
     impute_func2 <- function(flag.tc_lfq_order){
     min.num <- min(flag.tc_lfq_order[(flag.tc_lfq_order!=0)])/10
@@ -19,9 +19,9 @@ setwd("")
   }
 
     Obj.list = readRDS(file="ct_dataset_02.rds")
-    Obj.list$min_10_impute_log2 = Obj.list$filter
-    for(i in 1:dim(Obj.list$min_10_imputate_log2)[1]){#2516
-        Obj.list$min_10_impute_log2[i,] = impute_func2(Obj.list$min_10_impute_log2[i,])
+    Obj.list$Mini_impute_log2 = Obj.list$filter
+    for(i in 1:dim(Obj.list$Mini_impute_log2)[1]){#2516
+        Obj.list$Mini_impute_log2[i,] = impute_func2(Obj.list$Mini_impute_log2[i,])
     }  
     
 }
@@ -38,10 +38,10 @@ setwd("")
       temp_meta$cell_classification = NULL
       temp_meta = temp_meta[order(temp_meta$group),]
       
-      temp.df = Obj.list$no_imputate_log2
+      temp.df = Obj.list$no_impute_log2
       temp.df = temp.df %>% select(temp_meta$sample_id)
       temp.df = temp.df[apply(temp.df,1,sum)!=0,]
-      temp.df = Obj.list$min_10_imputate_log2[row.names(temp.df),temp_meta$sample_id]
+      temp.df = Obj.list$Mini_impute_log2[row.names(temp.df),temp_meta$sample_id]
       
       temp_samples_A = temp_meta$sample_id[which(temp_meta$group==groupA)]
       temp_samples_B = temp_meta$sample_id[which(temp_meta$group==groupB)]
