@@ -61,10 +61,168 @@ setwd("")
 
 # Figure_6d, Line plot of top Sig. PM proteins for 14 cell types.
 {
-
+    rm(list=ls())
+    Obj.list = readRDS("ct_dataset_01.rds")
     
-}
+    df = Obj.list$Mini_impute_log2
+    rowmeans.df = data.frame(row.names = levels(Obj.list$meta$CellType))
 
+    temp.mean.df = data.frame(row.names = row.names(Obj.list$filter))
+    for(i in levels(Obj.list$meta$CellType)){
+        temp_index = which(Obj.list$meta$CellType==i)  
+        temp_df = Obj.list$Mini_impute_log2[,temp_index]
+        temp.mean.df[,i] = rowMeans(temp_df,na.rm = TRUE)
+        # apply(plot.data[,temp_SampleID],1,mean)
+    }
+    #zscore
+    temp.mean.zscore=apply(temp.mean.df,1,function(x){ 
+        (x-mean(x))/sd(x)
+    })
+    temp.mean.zscore = temp.mean.zscore %>% t() %>% as.data.frame()
+    Obj.list$Mini_impute_scale = temp.mean.zscore
+    run_comparision_line = function(temp_target_gene,temp_target_cell){
+        # temp_target_cell = "PCC"
+        # temp_target_gene = c("Epcam","Msln","Mmp7","Krt18")
+        
+        temp_bg_gene_meta = Obj.list$dep_df %>% dplyr::filter(CellType==temp_target_cell) %>% 
+        dplyr::select(pid,genename) %>% unique()
+        temp_bg_gene_meta$genename = Obj.list$annotation[temp_bg_gene_meta$pid,"genename"]
+        
+        temp_target_gene_meta = Obj.list$dep_df %>% dplyr::filter(CellType==temp_target_cell) %>% 
+        dplyr::filter(genename %in% temp_target_gene )%>% 
+        dplyr::select(pid,genename) %>% unique()
+        row.names(temp_target_gene_meta) = temp_target_gene_meta$genename
+        temp_target_gene_meta = temp_target_gene_meta[temp_target_gene,]
+        
+        temp.1.df = Obj.list$Mini_impute_scale[temp_bg_gene_meta$pid,]
+        temp.2.df = Obj.list$Mini_impute_scale[temp_target_gene_meta$pid,]
+        
+        temp.plot.data.1 = temp.1.df %>% 
+        gather(key = "CellType",value="zscore")
+        temp.plot.data.1$genename = rep(temp_bg_gene_meta$genename,dim(temp.1.df)[2])
+        
+        temp.plot.data.2 = temp.2.df %>% 
+        gather(key = "CellType",value="zscore")
+        temp.plot.data.2$genename = rep(temp_target_gene_meta$genename,dim(temp.2.df)[2])
+        temp.plot.data.2$genename = factor(temp.plot.data.2$genename,levels = temp_target_gene)
+        
+        temp.plot.color = c(brewer.pal(9, "YlOrRd")[9],brewer.pal(9, "YlGnBu")[9])#,
+                            # brewer.pal(9, "Greens")[9])#,brewer.pal(9, "BuPu")[9])
+        temp.plot.data.2$color = rep(temp.plot.color, dim(temp.2.df)[2])
+        temp.plot.data.2$color = factor(temp.plot.data.2$color,levels = temp.plot.color)
+        
+        temp.plot.data.1$CellType = factor(temp.plot.data.1$CellType,levels=levels(Obj.list$meta$CellType))
+        temp.plot.data.2$CellType = factor(temp.plot.data.2$CellType,levels=levels(Obj.list$meta$CellType))
+        
+        temp.plot = 
+        ggplot() +
+        geom_line(data=temp.plot.data.1,aes(x=CellType, y=zscore, group=genename),size=1,
+                    color=c("darkgrey"))+
+        geom_line(data=temp.plot.data.2,aes(x=CellType, y=zscore, group=genename, colour=genename),size=1.5,show.legend = T  
+                    
+        ) +
+        # geom_text_repel( data=temp.line.anno.data, aes(x=rank,y=value,color=name, label = marker), hjust = -3, vjust = -1, size = 5.0,show.legend = F,min.segment.length = 1 ) +
+        geom_point(data=temp.plot.data.2,aes(x=CellType,y=zscore,color=color),color=temp.plot.data.2$color,size=2,show.legend = F)+
+        xlab("")+ylab("Z-score")+
+        scale_color_manual(values =levels(temp.plot.data.2$color))+
+        theme(axis.title = element_text(size = 12),axis.title.y = element_text(size = 12),legend.position = "right")+
+        theme_classic()+
+        theme(
+            # panel.grid.major=element_blank(),
+            panel.grid.minor=element_blank(),
+            panel.background = element_blank(),
+            legend.key=element_blank(),
+            # axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5,size=10),
+            axis.text.x = element_text(size=10,angle = 45, hjust = 1, vjust = 1,color = c(levels(Obj.list$meta$CellType_Color))),
+            legend.position=c(0.5,0.85),legend.title = element_text(size = 5),
+            legend.text = element_text(size = 8),
+            legend.direction = "horizontal",legend.background = element_blank()
+        )+
+        guides(colour=guide_legend(title=""))
+        return(temp.plot)
+    }
+    run_comparision_box = function(temp_target_gene){
+        temp.box.all = Obj.list$Mini_impute_log2
+        # temp.box.all = temp.box.all[c("Q99JW5","Q78IQ7","P55012","P09803"),]
+        temp_target_meta = Obj.list$annotation[Obj.list$annotation$genename%in%temp_target_gene,]
+        row.names(temp_target_meta) = temp_target_meta$genename
+        temp_target_meta = temp_target_meta[temp_target_gene,]
+        
+        temp.box.all = temp.box.all[temp_target_meta$pid,]
+        
+        temp_color = c(brewer.pal(9, "YlOrRd")[9],brewer.pal(9, "YlGnBu")[9])#,
+                    # brewer.pal(9, "Greens")[9])#,brewer.pal(9, "BuPu")[9])
+        temp_plot_list = list()
+        for(i in (1:dim(temp.box.all)[1])){
+        
+        temp.pid = row.names(temp.box.all[i,])
+        temp.genename = Obj.list$annotation[temp.pid,"genename"]
+        temp.df.gather = temp.box.all[i,] %>% gather(key="cell_type",value="value")
+        
+        temp.df.gather$name = gsub(temp.df.gather$cell_type,replacement = "",pattern = "_.*$")
+        
+        temp_plot_list[[i]] = ggpubr::ggboxplot(temp.df.gather, x = "name", y = "value",color=temp_color[i],
+                                                # palette = "jco",
+                                                add="jitter", add.params=list(size=1,fill=temp_color[i]),bxp.errorbar = TRUE,
+                                                # order = c("PCC","CAF","myCAF","apCAF","iCAF",
+                                                #           "T4","T8","Treg","B","MYE","DC","MAC",
+                                                #           "MONO","NEU")
+                                                order=levels(Obj.list$meta$CellType)
+        )+ 
+            # ggpubr::stat_compare_means(comparisons = my_comparisons,method = "t.test", 
+            #                            method.args = list(var.equal = TRUE), 
+            #                            label = "p.signif",hide.ns = TRUE,vjust = 0.5)+
+            xlab("")+
+            ylab("log2 LFQ intensity")+
+            theme(legend.position = "none")+ggtitle(paste(temp.pid,temp.genename,sep="_"))+
+            theme(plot.title = element_text(hjust = 0.5),
+                text = element_text(size=10),axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+                axis.title.x=element_blank()
+            )
+        
+        }
+        return(temp_plot_list)
+    }
+    
+        
+    ## PCC
+    temp_target_gene = c("Epcam","Cdh1")
+    temp_target_cell = "PCC"
+    temp_plot.PCC = run_comparision_line(temp_target_gene, temp_target_cell)
+    temp_plot_list.PCC = run_comparision_box(temp_target_gene)
+    
+    ##CAF
+    temp_target_gene = c("Ptk7","Ror2")
+    temp_target_cell = "CAF"
+    temp_plot.CAF = run_comparision_line(temp_target_gene, temp_target_cell)
+    temp_plot_list.CAF = run_comparision_box(temp_target_gene)
+    
+    ## Treg
+    temp_target_gene = c("Tnfrsf18","Klrg1")
+    temp_target_cell = "Treg"
+    temp_plot.Treg = run_comparision_line(temp_target_gene, temp_target_cell)
+    
+    temp_plot_list.Treg = run_comparision_box(temp_target_gene)
+    
+    ## DC
+    temp_target_gene = c("Icam1","F11r")
+    temp_target_cell = "DC"
+    temp_plot.DC = run_comparision_line(temp_target_gene, temp_target_cell)
+    temp_plot_list.DC = run_comparision_box(temp_target_gene)
+    
+    p1=ggpubr::ggarrange(temp_plot.PCC,temp_plot_list.PCC[[1]],temp_plot_list.PCC[[2]],
+                        temp_plot.CAF,temp_plot_list.CAF[[1]],temp_plot_list.CAF[[2]],
+                        temp_plot.Treg,temp_plot_list.Treg[[1]],temp_plot_list.Treg[[2]],
+                        temp_plot.DC,temp_plot_list.DC[[1]],temp_plot_list.DC[[2]],
+                        ncol = 3,nrow = 4
+                        )
+    pdf(file=paste0("write/Figure_6d_DEP_profile_",Sys.Date(),".pdf"),width = 10)
+    print(p1)
+    dev.off()
+
+}  
+
+}
 
 
 # Figure_6f, Volcano plot of Sig. proteins from two Treg subtypes
