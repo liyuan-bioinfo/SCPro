@@ -1,4 +1,3 @@
-###读取输入wkdir含有的文件夹###
 Input_dir<-list.files(paste0(getwd(), "/wkdir"))
 Input_dir
 
