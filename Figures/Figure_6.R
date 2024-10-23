@@ -55,8 +55,6 @@ setwd("")
     pdf(file=paste0("write/Figure_6c_Pheatmap_Surface_",Sys.Date(),".pdf"),height = 10)
     print(p1)
     dev.off()
-
-
 }
 
 # Figure_6d, Line plot of top Sig. PM proteins for 14 cell types.
@@ -221,8 +219,6 @@ setwd("")
     dev.off()
 
 }  
-
-
 
 # Figure_6f, Volcano plot of Sig. proteins from two Treg subtypes
 {
