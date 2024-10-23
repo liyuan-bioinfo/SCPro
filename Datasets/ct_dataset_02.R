@@ -26,7 +26,7 @@ setwd("")
     
 }
 
-# Significance calculate
+# Significance calculation
 {
     rm(list=ls())
     Obj.list = readRDS("ct_dataset_02.rds")
