@@ -28,7 +28,7 @@ setwd("")
     
 }
 
-# Significiance for 14 cell types
+# Sig. analysis for 14 cell types
 {
     rm(list=ls())
     Obj.list = readRDS(file = "ct_dataset_01.rds")
