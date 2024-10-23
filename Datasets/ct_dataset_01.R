@@ -9,7 +9,7 @@ library(org.Mm.eg.db)
 library(limma)
 
 setwd("")
-# Imputating missing values with 0.1 * minimum intensity of each protein
+# Imputing missing values with 0.1 * minimum intensity of each protein
 {
     impute_func2 <- function(flag.tc_lfq_order){
         min.num <- min(flag.tc_lfq_order[(flag.tc_lfq_order!=0)])/10
@@ -18,12 +18,12 @@ setwd("")
   }
     
     Obj.list = readRDS(file = "ct_dataset_01.rds")
-    Obj.list$min_10_imputate_log2 = Obj.list$filter
+    Obj.list$min_10_impute_log2 = Obj.list$filter
 
-    for(i in 1:dim(Obj.list$min_10_imputate_log2)[1]){
-        Obj.list$min_10_imputate_log2[i,] = impute_func2(Obj.list$min_10_imputate_log2[i,])
+    for(i in 1:dim(Obj.list$min_10_impute_log2)[1]){
+        Obj.list$min_10_impute_log2[i,] = impute_func2(Obj.list$min_10_impute_log2[i,])
       }
-    row.names(Obj.list$min_10_imputate_log2) = row.names(Obj.list$filter)
+    row.names(Obj.list$min_10_impute_log2) = row.names(Obj.list$filter)
     saveRDS(Obj.list,file = "ct_dataset_01.rds")
     
 }
@@ -139,7 +139,7 @@ setwd("")
       temp_submeta$CellType = factor(x=temp_submeta$CellType, levels = i)
       temp_submeta = temp_submeta[order(temp_submeta$CellType),]
       
-      temp_subdf = Obj.list$min_10_imputate_log2 %>% 
+      temp_subdf = Obj.list$min_10_impute_log2 %>% 
         select(temp_submeta$SampleID)
       temp.out = run_OnevsRest(temp_submeta, temp_subdf)
       if(temp.out!=0){
