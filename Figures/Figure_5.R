@@ -104,7 +104,7 @@ setwd("")
   rm(list=ls())
   Obj.list = readRDS(file = "ct_dataset_01.rds")
   
-  temp.df = Obj.list$min_10_imputate_log2
+  temp.df = Obj.list$Mini_impute_log2
   for(i in 1:dim(temp.df)[1]){
     temp.df[i,which(temp.df[i,]==0)]=NA
   }
@@ -139,7 +139,7 @@ setwd("")
   
 }
 
-# Pheatmap for visualization of known markers
+# Figure_12d, heat map for visualization of known markers
 {
   rm(list=ls())  
   Obj.list = readRDS(file = "ct_dataset_01.rds")
@@ -175,7 +175,7 @@ setwd("")
   known_markers.df = known_markers.df[known_markers,] ## sort
   known_markers.df$commonly_genename = c("Epcam","Dcn","Has1","Tagln","H2-Aa","CD45","CD3","CD4","CD8a","Foxp3","CD19","CD11b","S100a8","CD14","F4/80","CD11c")
   
-  known_markers_lfq.df = Obj.list$min_10_imputate_log2[known_markers.df$pid,]## all samples,markers
+  known_markers_lfq.df = Obj.list$Mini_impute_log2[known_markers.df$pid,]## all samples,markers
   
   ## row means
   meta.df = Obj.list$meta 
@@ -200,61 +200,20 @@ setwd("")
   my_gtable$grobs[[2]]$gp=gpar(col=levels(Obj.list$meta$CellType_Color),fontsize=12)
   p1$gtable = my_gtable
   
-  pdf(file = paste0("Fig3_A_Selected_Known_Markers_Pheatmap_",Sys.Date(),".pdf"),
+  pdf(file = paste0("Figure_12d_Selected_Known_Markers_Pheatmap_",Sys.Date(),".pdf"),
       width=7,heigh=6)
   print(p1)
   dev.off()
   
-  write.csv(known_marker_lfq_mean.df, file=paste0("Fig3_A_Selected_Known_Markers_Pheatmap_",Sys.Date(),".csv",sep=""),row.names = T)
+  write.csv(known_marker_lfq_mean.df, file=paste0("Fig_12d_Selected_Known_Markers_Pheatmap_",Sys.Date(),".csv",sep=""),row.names = T)
   
 }
 
-# PCA showing the distribution of four lineages
-{  
-  rm(list=ls())
-  Obj.list = readRDS(file = "ct_dataset_01.rds")
-  temp.df = Obj.list$min_10_imputate_log2 %>% t() %>% as.data.frame()
-  temp.df.anno = Obj.list$meta
-  
-  pca_result <- prcomp(temp.df,scale=T,center = T)
-  
-  df1 = as.data.frame(pca_result$x)
-  summ1 <- summary(pca_result)
-  xlab1 <- paste0("PC1 (",round(summ1$importance[2,1]*100,2),"%)")
-  ylab1 <- paste0("PC2 (",round(summ1$importance[2,2]*100,2),"%)")
-
-  
-  p1=ggplot(data = df1,aes(x = PC1,y = PC2,color = temp.df.anno$CellType))+
-    stat_ellipse(aes(fill = temp.df.anno$CellLineage),
-                 type = "norm",geom = "polygon",alpha = 0.25,
-                 color = NA
-    ) + 
-    geom_point(size = 3.5)+
-    labs(x = xlab1,y = ylab1,color = "",title = "")+
-    guides(fill = "none")+
-    theme_bw()+
-    scale_fill_manual(values = levels(temp.df.anno$CellLineage_Color))+
-    scale_colour_manual(values = levels(temp.df.anno$CellType_Color))+
-    theme(plot.background = element_blank(),legend.background = element_blank(),
-          panel.background = element_blank(),panel.grid = element_blank(),
-          axis.text = element_text(size = 12),axis.title = element_text(size = 16),
-          legend.text = element_text(size = 16),
-          plot.margin = unit(c(0.4,0.4,0.4,0.4),'cm'))
-  
-  
-  pdf(file=paste0("Fig5_C_Quantified_PCA_CellLineage_MinImputated_",Sys.Date(),".pdf"),
-      width = 7,height=5)
-  print(p1)
-  dev.off()
-  
-  write.csv(x = df1,file=paste0("Fig5_C_Quantified_PCA_CellLineage_MinImputated_",Sys.Date(),".csv"))
-}
-
-# Pheatmap showing the dep based on one-vs-the rest strategy
+# Figure_5_d, heat map showing the Sig. proteins based on one-vs-the rest strategy
 {
     rm(list=ls())
     Obj.list = readRDS(file = "ct_dataset_01.rds")
-    data <- Obj.list$min_10_imputate_log2
+    data <- Obj.list$Mini_impute_log2
     deg <- Obj.list$deg_Fig3
     meta = Obj.list$meta
     
@@ -265,9 +224,7 @@ setwd("")
       plot_data.median[,i]=apply(plot_data.df[,temp_SampleID],1,mean)
     }
     plot_data.median$genename = Obj.list$annotation[Obj.list$annotation$pid %in% plot_data.median$pid,"genename"]
-    
-    write.csv(plot_data.median,file = paste0("Fig3_E_Pheatmap_plot_data_",Sys.Date(),".csv"))
-    
+        
     ## add annotation
     annotation_col = data.frame(CellType = meta$CellType)
     row.names(annotation_col) = meta$SampleID
@@ -280,12 +237,12 @@ setwd("")
              annotation_col = annotation_col,show_colnames = F,legend_labels = F,annotation_legend = F,labels_col = NA,labels_row = NA,
              annotation_names_col = FALSE,annotation_colors = anno_colors
     )
-    pdf(file=paste0("Fig3_E_Pheatmap_Alldeg_",Sys.Date(),".pdf"))
+    pdf(file=paste0("Figure_5d_Pheatmap_Alldeg_",Sys.Date(),".pdf"))
     print(p1)
     dev.off()
-  }
+}
 
-# Enrichment Analysis based CellLineage Sig. proteins
+# Figure_5e, Enrichment Analysis based on CellLineage Sig. proteins
 {
   rm(list=ls())
   Obj.list = readRDS(file = "ct_dataset_01.rds")
@@ -344,7 +301,7 @@ setwd("")
       width=6,height=6)
   print(p2)
   dev.off()
-  write.csv(formula_res_cutoff@compareClusterResult,file=paste0("Fig3_D_Overlap_CellLineage_Specific_GO-BP_DotPlot_",Sys.Date(),".csv"))
+  write.csv(formula_res_cutoff@compareClusterResult,file=paste0("Figure_5e_Overlap_CellLineage_Specific_GO-BP_DotPlot_",Sys.Date(),".csv"))
     
 }
     
