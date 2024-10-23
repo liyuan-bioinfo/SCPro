@@ -7,12 +7,11 @@ library(RColorBrewer)
 library(ggplot2)
 
 setwd("")
-
-# for Figure-2J, cluster analysis of sig. proteins after one-way ANOVA
+# for Figure-S2c (left heat map), cluster analysis of sig. proteins
 {
   data.df = readxl::read_xlsx("sp_dataset_01.xlsx",sheet=1) %>% as.data.frame() # output from Perseus with one-way ANOVA
   names(data.df)=gsub(names(data.df),pattern = " MaxLFQ.*$",replacement = "")
-  data.df = data.df[which(data.df$`ANOVA Significant` == "+"),] #1776
+  data.df = data.df[which(data.df$`ANOVA Significant` == "+"),]
   
   meta.df = data.frame(SampleID=names(data.df)[3:14])
   meta.df$group = gsub(meta.df$SampleID,pattern = "[1-4]",replacement = "")  
@@ -25,10 +24,10 @@ setwd("")
   dev.off()
   
   temp.df = data.frame(pid=p1$tree_row$labels[p1$tree_row$order])
-  write.csv(temp.df,file="write/pheatmap_cluster_table.csv")
+  write.csv(temp.df,file="write/pheatmap_cluster_table.csv") # using this table to obtain individual cluster for each region
 }
 
-# for Figure-2J, Enrichment Analysis annotation of sig. Proteins
+# for Figure-S2c (right annotation of GOBP terms )
 {  
   pheatmap_cluster.df = read.csv(file="write/pheatmap_cluster_table.csv",header = T,row.names = 1)
   pheatmap_cluster.df$group = factor(pheatmap_cluster.df$group, levels = c("Acinar", "Tumor", "Lymph"))
@@ -41,5 +40,5 @@ setwd("")
                                 pvalueCutoff = 1,qvalueCutoff = 1,readable=TRUE                                
   )
   
-  write.csv(summary(formula_res), file="write/figure_2J_GOBP_enrichment.csv")  
+  write.csv(summary(formula_res), file="write/figure_S2c_GOBP_enrichment.csv")  
 }
