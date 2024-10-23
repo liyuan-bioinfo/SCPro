@@ -1,6 +1,6 @@
 #'@author Yuan
 #'@desc comparision with scRNA-seq
-#'@version comparison and visualization of 14 shared celltype using our ct_dataset_02 and public scRNA-seq dataset downloaded from GSE129455
+#'@version comparison and visualization of shared celltype using our ct_dataset_01 and public scRNA-seq dataset downloaded from GSE129455
 
 library(ggplot2)
 library(dplyr)
@@ -14,10 +14,10 @@ options(encoding = "UTF-8")
 
 setwd("")
 
-# panel a, Comparision umap of shared cell types and origin cell types from source data's paper. 
+# Figure_13a, Comparision umap of shared cell types and origin cell types from source data's paper. 
 {
   rm(list=ls())
-  TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2022-11-29.rda")
+  TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda") #Anyone can download processed scRNA-seq from https://doi.org/10.5281/zenodo.13981062 
   
   Idents(TotalTissue.harmony) = TotalTissue.harmony$Main_subset_labels2
   p1=DimPlot(TotalTissue.harmony,label = TRUE,raster = T,cols = c(
@@ -39,15 +39,16 @@ setwd("")
     theme(plot.background = element_blank(),panel.background = element_blank(),panel.grid = element_blank())
   
   plot = ggpubr::ggarrange(p1,p2,ncol=2)
-  pdf(file=paste0("write/A_scRNA-seq_UMAP_",Sys.Date(),".pdf"),width=14,height = 5)
+  pdf(file=paste0("write/Figure_S13a_scRNA-seq_UMAP_",Sys.Date(),".pdf"),width=14,height = 5)
   print(plot)
   dev.off()
   
   meta_df = TotalTissue.harmony@meta.data
-  write.csv(meta_df, "write/scRNA_seq_meta.csv")
+  write.csv(meta_df, "write/Figure_S13a_scRNA_seq_meta.csv")
 }
 
-# cor, RNA vs RNA and Protein vs Protein
+# Figure_S13b, Pearson Corr. Coef. using shared cell types
+# upper panel: RNA vs RNA, bottom panel: Protein vs Protein
 {
   rm(list=ls())
   TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda")
@@ -67,9 +68,7 @@ setwd("")
                                       idents=unique(scRNA_meta_filter.df$Main_subset_labels_V2))
   
   Idents(TotalTissue.harmony.filter) = TotalTissue.harmony.filter$Main_subset_labels_V2
-  
-  # saveRDS(TotalTissue.harmony.filter,file = paste0("GSE129455_All_Viable_with_subset_filter_2024-03-27.rda"))
-  
+    
   av.exp <- AverageExpression(TotalTissue.harmony.filter)$RNA
   cor.exp <- as.data.frame(cor(av.exp))
 
@@ -77,8 +76,8 @@ setwd("")
   p1=ggcorr(cor_matrix =cor(av.exp)[],data=NULL, midpoint=0.5,label = FALSE,
          label_round=2,label_size = 4,size=5,low="steelblue",mid="white",high="red",
          legend.position = "bottom",limits=c(0,1),label_alpha = TRUE)#+theme(legend.position = "none")#+coord_flip()
-  write.csv(cor(av.exp)[],file="write/rna_cor.csv")
-  pdf(file=paste0("write/b_corr_rna_",Sys.Date(),".pdf"))
+  write.csv(cor(av.exp)[],file="write/Figure_S13b_rna_cor.csv")
+  pdf(file=paste0("write/Figure_S13b_corr_rna_",Sys.Date(),".pdf"))
   print(p1)
   dev.off()
   
@@ -94,8 +93,8 @@ setwd("")
   p2=ggcorr(cor_matrix =cor(lfq_mean.df)[],data=NULL, midpoint =0.5,label = FALSE,
          label_round=2,label_size = 4,size=5,low="steelblue",mid="white",high="red",
          legend.position = "bottom",limits=c(0,1),label_alpha = TRUE)#+theme(legend.position = "none")+coord_flip()
-  write.csv(cor(lfq_mean.df)[],file="write/protein_cor.csv")
-  pdf(file=paste0("write/b_corr_protein_",Sys.Date(),".pdf"))
+  write.csv(cor(lfq_mean.df)[],file="write/Figure_S13b_protein_cor.csv")
+  pdf(file=paste0("write/Figure_S13b_corr_protein_",Sys.Date(),".pdf"))
   print(p2)
   dev.off()
 
@@ -147,10 +146,10 @@ setwd("")
 
     }
     cor_df = data.frame(celltype = ct13_order, cor = output_cor)
-    write.csv(cor_df, "write/RNAvsProtein_cor.csv")
+    write.csv(cor_df, "write/Figure_S13b_RNAvsProtein_cor.csv")
 }
 
-# Heatmap, known markers, Protein vs RNA
+# Figure_S13c, Heatmap, known markers, Protein vs RNA
 {
   rm(list=ls())
   TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda")
@@ -234,7 +233,7 @@ setwd("")
                      # color = colorRampPalette(c("blue","white","red"))(100), 
                      width = 9,height = 5)
   # save plot
-  pdf(file=paste0("write/C_RNA-Protein-DEG_Pheatmap_",Sys.Date(),".pdf"),width=5,height = 8)
+  pdf(file=paste0("write/Figure_S13c_RNA-Protein-DEG_Pheatmap_",Sys.Date(),".pdf"),width=5,height = 8)
   print(p1)
   dev.off()
 
@@ -242,11 +241,12 @@ setwd("")
   mat = as.matrix(plot.df)
   mat = apply(mat,1,scale) %>% t() %>% as.data.frame()
   names(mat) = names(plot.df)
-  write.csv(file="scRNA-seq_pheatmap.csv",x = mat)
+  write.csv(file="write/Figure_S13c_scRNA-seq_pheatmap.csv",x = mat)
   
 }
 
 # comparison of cell-percentage from public scRNA-seq dataset
+# NOT used
 {
     rm(list=ls())
     TotalTissue.harmony = readRDS(file = "GSE129455_All_Viable_with_subset_2024-03-27.rda")
