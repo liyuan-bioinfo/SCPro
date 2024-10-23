@@ -8,7 +8,7 @@ library(ggplot2)
 library(ggpubr)
 
 setwd("")
-# Figure_4C, heatmap for Sig. proteins after one-way ANOVA
+# Figure_4c, heat map of Sig. proteins for acinar, PanIN and PDAC regions
 {
     rm(list=ls())
     Obj.list = readRDS(file="sp_dataset_03.rds")
@@ -42,10 +42,9 @@ setwd("")
     dev.off()
 }
 
-# for Figure_4D, Enrichment Analysis of Sig. proteins after one-way ANOVA
+# Figure_4d, enrichment analysis of Sig. proteins for acinar, PanIN and PDAC regions
 {
     rm(list=ls())
-
     Obj.list = readRDS(file = "sp_dataset_03.rds")
     dep.df = Obj.list$PDAC_stage %>% filter(Pvalue<0.05 & log2FC>log2(2))
     dep.df$ENTREZID = Obj.list$anno[dep.df$pid,"GeneID"]        
@@ -160,7 +159,7 @@ setwd("")
     dev.off()    
 }
 
-# for Figure_4G, pheatmap based on the Sig. proteins after two-sided student's t-test
+# for Figure_4g, heat map of the Sig. proteins after two-sided Student's t-test
 {
     rm(list=ls())
     Obj.list = readRDS(file="sp_dataset_03.rds")
@@ -192,7 +191,7 @@ setwd("")
     dev.off()    
 }
 
-# for Figure_4H, Enrichment Analysis of Sig. proteins
+# for Figure_4h, enrichment analysis of Sig. proteins for IT and LN regions
 {
     rm(list=ls())
     Obj.list = readRDS(file = "sp_dataset_03.rds")
