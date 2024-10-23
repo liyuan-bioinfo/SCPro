@@ -21,7 +21,7 @@ options(encoding = "UTF-8")
 setwd("")
 {
   rm(list=ls())
-  kpc.data <- read.csv("GSE129455_All_Viable_expression.csv",header = TRUE)
+  kpc.data <- read.csv("GSE129455_All_Viable_expression.csv",header = TRUE) # download GSE129455
   saveRDS(kpc.data,file="GSE129455_All_Viable_expression.rda")  
 }
 
